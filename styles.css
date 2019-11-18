@@ -1,0 +1,21 @@
+#app {
+    display: flex;
+    justify-content: center;
+    margin-top: 5rem;
+    text-align: center;
+    position: relative;
+}
+
+#description {
+    font-size: 1.8rem;
+    margin-top: -.1rem;
+}
+
+#temp {
+    font-size: 3rem;
+    margin-top: -1rem;
+}
+
+img {
+    margin-top: -.6rem;
+}
