@@ -1,9 +1,13 @@
 #app {
     display: flex;
     justify-content: center;
-    margin-top: 5rem;
+    margin-top: 2rem;
     text-align: center;
     position: relative;
+}
+
+h1 {
+    margin-bottom: 3.5rem;
 }
 
 #description {
