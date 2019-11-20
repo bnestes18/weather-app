@@ -36,8 +36,7 @@ let createWeatherTemplate = function (options) {
         // Inject weather icon, description, and temperature into the DOM
         app.innerHTML = '<div>' + 
                         '<h1>Weather App</h1>' +
-                        app.textContent + '<h2 id="city-name">' + sanitizeHTML(city_name) + ', ' + 
-                            sanitizeHTML(state_code) + '</h2>' +
+                        app.textContent + 
                             '<div>' + iconSrc + '</div>' + 
                             '<p id="description">' + sanitizeHTML(settings.message(description, city_name, state_code)) + '</p>' +
                             '<p id="temp">' + sanitizeHTML(temp) + '&deg' + '</p>' +
