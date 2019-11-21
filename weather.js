@@ -8,38 +8,70 @@ let createWeatherTemplate = function (options) {
     weather description message, and the display of icon (boolean)
     */
     let defaults = {
+        apiKey: null,
         selector: '#app',
         units: 'I',
-        message: function (data1, data2, data3) {
-            return `Today's weather is: ${data1} in ${data2}, ${data3}`
-        },
+        message: `Today's weather is: {{ temp }}, {{ description }} in {{ cityName }}, {{ stateName }}`,
+        noWeather: 'Unable to display weather data at this time',
         showIcon: true
-        
     }
     
-    let apiKey = '64f486df994244a390e668d6e6611fc1' //WeatherBit
+    // Merge custom options (if any), with the default options
     let settings = Object.assign(defaults, options);
     let app = document.querySelector(settings.selector);
 
     // FUNCTIONS
+    /*
+    Displays icon if user configures the setting to show it
+    */
+    let getIcon = function (weatherIcon) {
+
+            if (!settings.showIcon) return '';                  // If options value is set to false, show empty string
+           
+            // Otherwise, return the icon
+            let html = '<div>' + 
+                            '<img id="image" src="https://www.weatherbit.io/static/img/icons/' + sanitizeHTML(weatherIcon) + '.png"/>' +
+                       '</div>';
+            return html;
+            
+    }
+
+    /* 
+    Replaces the placeholders (in defaults object) with weather object data
+    returned from weather api
+    */
+    let getDescription = function (weather) {
+        let { temp, city_name, state_code } = weather.data[0];
+        let { description } = weather.data[0].weather;
+        
+        return settings.message 
+            .replace('{{ description }}', sanitizeHTML(description)) 
+            .replace('{{ cityName }}', sanitizeHTML(city_name))
+            .replace('{{ stateName }}', sanitizeHTML(state_code))
+            .replace('{{ temp }}', sanitizeHTML(temp) + '&deg')
+    }
+    /*
+    Renders a message if there is no weather to display 
+    (as a result of an error)
+    */
+    let renderNoWeather = function () {
+        return '<p>' + settings.noWeather + '</p>';
+    }
 
     /*
     Extracts location and weather properties from returned data objects
     and renders the location, weather icon and weather description
-    properties into the DoM
+    properties into the DOM
     */
-    let renderWeather = function (data) {
-        let { temp, city_name, state_code } = data.data[0];      // Extract temp property from returned api
-        let { icon, description } = data.data[0].weather;        // Extract properties from weather object (inside returned api)
-        let iconSrc = '<img id="image" src="https://www.weatherbit.io/static/img/icons/' + sanitizeHTML(icon) + '.png"/>';
-
+    let renderWeather = function (weather) {
+        let { icon } = weather.data[0].weather;        // Extract properties from weather object (inside returned api)
+        
         // Inject weather icon, description, and temperature into the DOM
         app.innerHTML = '<div>' + 
                         '<h1>Weather App</h1>' +
                         app.textContent + 
-                            '<div>' + iconSrc + '</div>' + 
-                            '<p id="description">' + sanitizeHTML(settings.message(description, city_name, state_code)) + '</p>' +
-                            '<p id="temp">' + sanitizeHTML(temp) + '&deg' + '</p>' +
+                            getIcon(sanitizeHTML(icon)) + 
+                        '<p id="description">' + getDescription(weather) + '</p>'
                         '</div>';
     }
 
@@ -55,6 +87,11 @@ let createWeatherTemplate = function (options) {
         return temp.innerHTML;
     };
 
+    // Check if apiKey exists before making get requests to the api(s)
+    if (!settings.apiKey) {
+        console.warn('Please provide a valid api key in order to display the weather.')
+    }
+
     // Make a Get request for the location data
     fetch('https://ipapi.co/json')
         .then(function (response) {
@@ -66,7 +103,7 @@ let createWeatherTemplate = function (options) {
         // Make a Get request for the weather data
         }).then(function (locationData) {
             let { city, region_code } = locationData;     // Extract properties from returned api 
-            return fetch('https://api.weatherbit.io/v2.0/current?' + 'city=' + city + ',' + region_code + '&units=' + settings.units + '&key=' + apiKey)
+            return fetch('https://api.weatherbit.io/v2.0/current?' + 'city=' + city + ',' + region_code + '&units=' + settings.units + '&key=' + settings.apiKey)
 
         }).then(function (response) {
             if (response.ok) {
@@ -75,21 +112,15 @@ let createWeatherTemplate = function (options) {
                 return Promise.reject(response);
             }
         }).then(function (weatherData) {
-
+            // Render the weather
             renderWeather(weatherData);
-
-            let image = document.querySelector('#image');  // Select the image after it renders
-            if (settings.showIcon) {                   // Checks boolean value of showIcon property (in defaults)
-                image.style.display = 'inline';
-            } else {
-                image.style.display = 'none';
-            }
-        })   
-
-        .catch(function (err) {
+        }).catch(function (err) {
             console.log(err);
-            app.textContent = 'Unable to display weather data at this time'
+            app.innerHTML = renderNoWeather();
         })
 };
 
-createWeatherTemplate();        // Initialize template defaults
+// Initialize template defaults
+createWeatherTemplate({
+    apiKey: '64f486df994244a390e668d6e6611fc1'  //WeatherBit'
+});        

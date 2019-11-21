@@ -4,6 +4,8 @@
     margin-top: 2rem;
     text-align: center;
     position: relative;
+    
+    
 }
 
 h1 {
@@ -13,6 +15,8 @@ h1 {
 #description {
     font-size: 1.8rem;
     margin-top: -.1rem;
+    max-width: 20rem;
+    
 }
 
 #temp {
