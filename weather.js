@@ -121,6 +121,6 @@ let createWeatherTemplate = function (options) {
 };
 
 // Initialize template defaults
-createWeatherTemplate({
-    apiKey: '64f486df994244a390e668d6e6611fc1'  //WeatherBit'
-});        
+// createWeatherTemplate({
+//     apiKey: '64f486df994244a390e668d6e6611fc1'  //WeatherBit'
+// });        
