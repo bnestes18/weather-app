@@ -2,14 +2,14 @@ let createWeatherTemplate = function(options) {
 	// VARIABLES and OBJECTS
 
 	/*
-    Object that configures selector (css selector), units (Celsius -> '' or Fahrenheit -> I), 
+    Object that configures selector (css selector), units (Celsius -> '' or Fahrenheit -> I),
     weather description message, and the display of icon (boolean)
     */
 	let defaults = {
 		apiKey: null,
 		selector: '#app',
 		units: 'I',
-		message: `Today's weather is: {{ temp }}, {{ description }} in {{ cityName }}, {{ stateName }}`,
+		message: `Today's weather is: {{ temp }} and {{ description }} in {{ cityName }}, {{ stateName }}`,
 		noWeather: 'Unable to display weather data at this time',
 		showIcon: true,
 	};
@@ -36,7 +36,7 @@ let createWeatherTemplate = function(options) {
 		return html;
 	};
 
-	/* 
+	/*
     Replaces the placeholders (in defaults object) with weather object data
     returned from weather api
     */
@@ -45,13 +45,13 @@ let createWeatherTemplate = function(options) {
 		let { description } = weather.data[0].weather;
 
 		return settings.message
-			.replace('{{ description }}', sanitizeHTML(description))
+			.replace('{{ description }}', sanitizeHTML(description.toLowerCase()))
 			.replace('{{ cityName }}', sanitizeHTML(city_name))
 			.replace('{{ stateName }}', sanitizeHTML(state_code))
 			.replace('{{ temp }}', sanitizeHTML(temp) + '&deg');
 	};
 	/*
-    Renders a message if there is no weather to display 
+    Renders a message if there is no weather to display
     (as a result of an error)
     */
 	let renderNoWeather = function() {
