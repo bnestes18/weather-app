@@ -1,4 +1,4 @@
-const apiKey = "13761af9429944de944a47df188d38d4";
+const apiKey = "";
 let app = document.querySelector('#app');
 let options = {
     enableHighAccuracy: true, 
