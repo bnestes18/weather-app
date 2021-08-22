@@ -7,16 +7,31 @@
     I for Fahrenheit)
 */
 
-function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") {
+function customizeWeather(apiKey, customOptions) {
+    // Default options object - Referencede if either no customOptions are specified or only a subset of custom options are provided
+    let defaults = {
+        showIcon: true, 
+        weatherMessage: "", 
+        units: "I" 
+    }
+
+    let options = undefined || customOptions;
+
+    // If no custom options are specified, set to default options
+    if (!options) {
+        options = defaults;
+    } else {
+        // Custom options are specified - set defaults for omitted options (if any)
+        options = Object.assign({}, defaults, customOptions);
+    }
+
+    let {showIcon, weatherMessage, units} = options;
     
     if (!apiKey) { throw new Error("Api key is null or invalid.")}
 
     // Get the #app element
     let app = document.querySelector('#app');
-    let options = {
-        enableHighAccuracy: true, 
-        timeout: Infinity, maximumAge: 0
-    }
+    
     let unitType;
 
     // Challenge: Create a multipage website that allows you to see different weather screens
@@ -104,7 +119,10 @@ function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") 
     }
 
     // Request access to the user's location
-    navigator.geolocation.getCurrentPosition(getWeather, noWeather, options);
+    navigator.geolocation.getCurrentPosition(getWeather, noWeather, {
+        enableHighAccuracy: true, 
+        timeout: Infinity, maximumAge: 0
+    });
 }
 
-customizeWeather("", true, "It is going to be beautiful outside!", "I");
+customizeWeather("", {showIcon: false, units: "I"});
