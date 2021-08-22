@@ -9,7 +9,6 @@
 
 function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") {
     
-    // const apiKey = "c4829f1741a24063a4eb359bfdfe7616";
     if (!apiKey) { throw new Error("Api key is null or invalid.")}
 
     // Get the #app element
@@ -23,7 +22,10 @@ function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") 
     // Challenge: Create a multipage website that allows you to see different weather screens
 
 
-
+    /**
+     * Fetches data (weather data) via API call
+     * @param {String} url      The api endpoint
+     */
     async function fetchData(url) {
         try {
             let response = await fetch(url);
@@ -51,6 +53,10 @@ function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") 
         });
     }
 
+    /**
+     * Displays the template with the fetched weather data
+     * @param {Object} weather      Weather data object (i.e. description, icon, city_name, state_code)
+     */
     function render(weather) {
         console.log('This is the weather object', weather);
 
@@ -101,4 +107,4 @@ function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") 
     navigator.geolocation.getCurrentPosition(getWeather, noWeather, options);
 }
 
-customizeWeather("", true, "It is going to be beautiful outside!", "C");
+customizeWeather("", true, "It is going to be beautiful outside!", "I");
