@@ -71,9 +71,12 @@ function customizeWeather(apiKey, showIcon = true, weatherMessage, units = "I") 
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
 
-        if (units === "C") {
+        if (units === "M") {
             unitType = "celcius"
-        } else {
+        } else if (units === "S") {
+            unitType = "kelvin"
+        }
+        else {
             unitType = "fahrenheit"
         }
 
