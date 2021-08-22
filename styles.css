@@ -1,6 +1,7 @@
-#app {
+#app, h1 {
     text-align: center;
 }
+
 
 .hideIcon {
     display: none;
